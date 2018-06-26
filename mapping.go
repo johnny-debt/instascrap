@@ -8,7 +8,7 @@ type account struct {
 
 // Retrieves medias from JSON returned by an hashtag page
 func getFromHashtagPage(data []byte) ([]Media, error) {
-	var mediaJSON struct {
+	var mediasJSON struct {
 		Graphql struct {
 			Hashtag struct {
 				EdgeHashtagToMedia struct {
@@ -37,22 +37,22 @@ func getFromHashtagPage(data []byte) ([]Media, error) {
 		} `json:"graphql"`
 	}
 
-	err := json.Unmarshal(data, &mediaJSON)
+	err := json.Unmarshal(data, &mediasJSON)
 	if err != nil {
 		return []Media{}, err
 	}
 
 	var medias []Media
 
-	for _, itemJSON := range mediaJSON.Graphql.Hashtag.EdgeHashtagToMedia.Edges {
+	for _, mediaJSON := range mediasJSON.Graphql.Hashtag.EdgeHashtagToMedia.Edges {
 		media := Media{}
-		media.ID = itemJSON.Node.ID
-		media.Shortcode = itemJSON.Node.Shortcode
-		media.Owner = Account{ID: itemJSON.Node.Owner.ID}
-		for _, captionEdge := range itemJSON.Node.EdgeMediaToCaption.Edges {
+		media.ID = mediaJSON.Node.ID
+		media.Shortcode = mediaJSON.Node.Shortcode
+		media.Owner = Account{ID: mediaJSON.Node.Owner.ID}
+		for _, captionEdge := range mediaJSON.Node.EdgeMediaToCaption.Edges {
 			media.Caption += captionEdge.Node.Text
 		}
-		media.CommentsCount = itemJSON.Node.EdgeMediaToComment.Count
+		media.CommentsCount = mediaJSON.Node.EdgeMediaToComment.Count
 
 		medias = append(medias, media)
 	}
