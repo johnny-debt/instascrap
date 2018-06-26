@@ -1,11 +1,11 @@
 package instascrap
 
 import (
-	"testing"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
-func TestGetMediasFromHashtagPage(t *testing.T)  {
+func TestGetMediasFromHashtagPage(t *testing.T) {
 	json := ReadTestDataFile("test-01-get-medias-from-hashtag-page.json")
 	medias, err := getFromHashtagPage(json)
 	assert.Nil(t, err, "Error is unexpected")

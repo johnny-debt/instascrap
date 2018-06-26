@@ -1,9 +1,9 @@
 package instascrap
 
 import (
-	"net/http"
 	"errors"
 	"io/ioutil"
+	"net/http"
 )
 
 func getDataFromURL(url string) ([]byte, error) {
@@ -14,7 +14,7 @@ func getDataFromURL(url string) ([]byte, error) {
 	}
 
 	if resp.StatusCode != 200 {
-		return nil, errors.New( "statusCode != 200")
+		return nil, errors.New("statusCode != 200")
 	}
 	defer resp.Body.Close()
 

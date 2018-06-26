@@ -14,9 +14,9 @@ func getFromHashtagPage(data []byte) ([]Media, error) {
 				EdgeHashtagToMedia struct {
 					Edges []struct {
 						Node struct {
-							ID string `json:"id"`
-							Shortcode string `json:"shortcode"`
-							Owner account `json:"owner"`
+							ID                 string  `json:"id"`
+							Shortcode          string  `json:"shortcode"`
+							Owner              account `json:"owner"`
 							EdgeMediaToCaption struct {
 								Edges []struct {
 									Node struct {

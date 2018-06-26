@@ -1,9 +1,9 @@
 package instascrap
 
 import (
+	"io/ioutil"
 	"os"
 	"path/filepath"
-	"io/ioutil"
 )
 
 func getTestDataPath() string {
