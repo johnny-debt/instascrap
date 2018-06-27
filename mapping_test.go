@@ -13,7 +13,7 @@ func TestGetMediasFromHashtagPage(t *testing.T) {
 	assert.Len(t, medias, 63, "Medias count mismatch")
 }
 
-func TestGetMediasFromHashtagPageWithWrongJson(t *testing.T)  {
+func TestGetMediasFromHashtagPageWithWrongJson(t *testing.T) {
 	_, err := getFromHashtagPage([]byte("[wrong json"))
 	assert.Error(t, err)
 }
