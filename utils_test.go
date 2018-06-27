@@ -25,7 +25,8 @@ func TestGetDataFromUrlSuccessful(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-func TestGetDataFromUrlNon200HttpCode(t *testing.T) {
+// We returns 302 redirect without location header to emulate error
+func TestGetDataFromUrlError(t *testing.T) {
 	defer gock.Off()
 
 	apiUrl := "http://example.com"
@@ -34,6 +35,23 @@ func TestGetDataFromUrlNon200HttpCode(t *testing.T) {
 	gock.New(apiUrl).
 		Get(apiPath).
 		Reply(302).
+		BodyString("")
+
+	_, err := getDataFromURL(apiUrl + "/" + apiPath)
+
+	assert.Error(t, err)
+}
+
+// We returns 201 code, which is unexpected and must produce error as well
+func TestGetDataFromUrlNon200HttpCode(t *testing.T) {
+	defer gock.Off()
+
+	apiUrl := "http://example.com"
+	apiPath := "status"
+
+	gock.New(apiUrl).
+		Get(apiPath).
+		Reply(201).
 		BodyString("")
 
 	_, err := getDataFromURL(apiUrl + "/" + apiPath)
