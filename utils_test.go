@@ -10,7 +10,7 @@ import (
 func TestGetDataFromUrlSuccessful(t *testing.T) {
 	defer gock.Off()
 
-	apiUrl := "http://example.com"
+	apiUrl := "https://example.com"
 	apiPath := "status"
 	expectedResponse := "anything"
 
@@ -22,7 +22,7 @@ func TestGetDataFromUrlSuccessful(t *testing.T) {
 	actualResponse, err := getDataFromURL(apiUrl + "/" + apiPath)
 
 	assert.Equal(t, []byte(expectedResponse), actualResponse)
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 }
 
 // We returns 302 redirect without location header to emulate error
