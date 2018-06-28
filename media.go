@@ -1,6 +1,9 @@
 package instascrap
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+)
 
 const hashtagMediasURL = "https://www.instagram.com/explore/tags/%s/?__a=1&max_id=%s"
 
@@ -20,7 +23,7 @@ type Media struct {
 func GetHashtagMedia(tag string) ([]Media, error) {
 	var medias []Media
 	url := fmt.Sprintf(hashtagMediasURL, tag, "")
-	jsonBody, err := getDataFromURL(url)
+	jsonBody, err := getDataFromURL(url, ioutil.ReadAll)
 	if err != nil {
 		return nil, err
 	}

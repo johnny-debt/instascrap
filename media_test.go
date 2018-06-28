@@ -1,10 +1,10 @@
 package instascrap
 
 import (
-	"testing"
-	"gopkg.in/h2non/gock.v1"
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/h2non/gock.v1"
+	"testing"
 )
 
 // Ensures that this method returns exactly response body
@@ -29,6 +29,27 @@ func TestGetHashtagMediaSuccessful(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Len(t, medias, 63)
 	validateMediaObjects(t, medias)
+}
+
+// Ensures that when JSON retrieving occurred this method returns error as well
+func TestGetHashtagMediaJSONRetrievingError(t *testing.T) {
+	defer gock.Off()
+	hashtag := "something"
+	maxId := ""
+	apiEndpoint := "https://www.instagram.com"
+	apiUri := fmt.Sprintf("explore/tags/%s", hashtag)
+	params := map[string]string{"__a": "1", "max_id": maxId}
+
+	gock.New(apiEndpoint).
+		Get(apiUri).
+		MatchParams(params).
+		Reply(201).
+		JSON("")
+
+	medias, err := GetHashtagMedia(hashtag)
+
+	assert.Error(t, err)
+	assert.Nil(t, medias)
 }
 
 func validateMediaObjects(t *testing.T, medias []Media) {
