@@ -71,7 +71,7 @@ func TestGetDataFromUrlBodyReadError(t *testing.T) {
 
 	gock.New(apiUrl).
 		Get(apiPath).
-		Reply(201).
+		Reply(200).
 		BodyString("")
 
 	_, err := getDataFromURL(apiUrl+"/"+apiPath, func(r io.Reader) ([]byte, error) {
