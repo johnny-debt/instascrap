@@ -2,11 +2,11 @@ package instascrap
 
 import (
 	"errors"
-	"io/ioutil"
+	"io"
 	"net/http"
 )
 
-func getDataFromURL(url string) ([]byte, error) {
+func getDataFromURL(url string, reader func(r io.Reader) ([]byte, error)) ([]byte, error) {
 	resp, err := http.Get(url)
 
 	if err != nil {
@@ -18,7 +18,7 @@ func getDataFromURL(url string) ([]byte, error) {
 	}
 	defer resp.Body.Close()
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := reader(resp.Body)
 	if err != nil {
 		return nil, err
 	}

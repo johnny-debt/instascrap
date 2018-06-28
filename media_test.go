@@ -1,10 +1,10 @@
 package instascrap
 
 import (
-	"testing"
-	"gopkg.in/h2non/gock.v1"
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"gopkg.in/h2non/gock.v1"
+	"testing"
 )
 
 // Ensures that this method returns exactly response body
