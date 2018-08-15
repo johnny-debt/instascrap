@@ -2,29 +2,31 @@ package instascrap
 
 import (
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"gopkg.in/h2non/gock.v1"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	gock "gopkg.in/h2non/gock.v1"
 )
 
 // Ensures that this method returns exactly response body
 func TestGetHashtagMediaSuccessful(t *testing.T) {
 	defer gock.Off()
 	hashtag := "something"
-	maxId := ""
+	maxID := ""
 	apiEndpoint := "https://www.instagram.com"
-	apiUri := fmt.Sprintf("explore/tags/%s", hashtag)
-	params := map[string]string{"__a": "1", "max_id": maxId}
+	apiURI := fmt.Sprintf("explore/tags/%s", hashtag)
+	params := map[string]string{"__a": "1", "max_id": maxID}
 
 	json := ReadTestDataFile("test-01-get-medias-from-hashtag-page.json")
 
 	gock.New(apiEndpoint).
-		Get(apiUri).
+		Get(apiURI).
 		MatchParams(params).
 		Reply(200).
 		JSON(json)
 
-	medias, err := GetHashtagMedia(hashtag)
+	instascrap := NewInstascrap(nil)
+	medias, err := instascrap.GetHashtagMedia(hashtag)
 
 	assert.NoError(t, err)
 	assert.Len(t, medias, 63)
@@ -35,18 +37,19 @@ func TestGetHashtagMediaSuccessful(t *testing.T) {
 func TestGetHashtagMediaJSONRetrievingError(t *testing.T) {
 	defer gock.Off()
 	hashtag := "something"
-	maxId := ""
+	maxID := ""
 	apiEndpoint := "https://www.instagram.com"
-	apiUri := fmt.Sprintf("explore/tags/%s", hashtag)
-	params := map[string]string{"__a": "1", "max_id": maxId}
+	apiURI := fmt.Sprintf("explore/tags/%s", hashtag)
+	params := map[string]string{"__a": "1", "max_id": maxID}
 
 	gock.New(apiEndpoint).
-		Get(apiUri).
+		Get(apiURI).
 		MatchParams(params).
 		Reply(201).
 		JSON("")
 
-	medias, err := GetHashtagMedia(hashtag)
+	instascrap := NewInstascrap(nil)
+	medias, err := instascrap.GetHashtagMedia(hashtag)
 
 	assert.Error(t, err)
 	assert.Nil(t, medias)

@@ -2,27 +2,29 @@ package instascrap
 
 import (
 	"errors"
-	"github.com/stretchr/testify/assert"
-	"gopkg.in/h2non/gock.v1"
 	"io"
 	"io/ioutil"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	gock "gopkg.in/h2non/gock.v1"
 )
 
 // Ensures that this method returns exactly response body
 func TestGetDataFromUrlSuccessful(t *testing.T) {
 	defer gock.Off()
 
-	apiUrl := "https://example.com"
+	apiURL := "https://example.com"
 	apiPath := "status"
 	expectedResponse := "anything"
 
-	gock.New(apiUrl).
+	gock.New(apiURL).
 		Get(apiPath).
 		Reply(200).
 		BodyString(expectedResponse)
 
-	actualResponse, err := getDataFromURL(apiUrl+"/"+apiPath, ioutil.ReadAll)
+	instascrap := NewInstascrap(nil)
+	actualResponse, err := instascrap.getDataFromURL(apiURL+"/"+apiPath, ioutil.ReadAll)
 
 	assert.Equal(t, []byte(expectedResponse), actualResponse)
 	assert.NoError(t, err)
@@ -32,15 +34,16 @@ func TestGetDataFromUrlSuccessful(t *testing.T) {
 func TestGetDataFromUrlError(t *testing.T) {
 	defer gock.Off()
 
-	apiUrl := "http://example.com"
+	apiURL := "http://example.com"
 	apiPath := "status"
 
-	gock.New(apiUrl).
+	gock.New(apiURL).
 		Get(apiPath).
 		Reply(302).
 		BodyString("")
 
-	_, err := getDataFromURL(apiUrl+"/"+apiPath, ioutil.ReadAll)
+	instascrap := NewInstascrap(nil)
+	_, err := instascrap.getDataFromURL(apiURL+"/"+apiPath, ioutil.ReadAll)
 
 	assert.Error(t, err)
 }
@@ -49,15 +52,16 @@ func TestGetDataFromUrlError(t *testing.T) {
 func TestGetDataFromUrlNon200HttpCode(t *testing.T) {
 	defer gock.Off()
 
-	apiUrl := "http://example.com"
+	apiURL := "http://example.com"
 	apiPath := "status"
 
-	gock.New(apiUrl).
+	gock.New(apiURL).
 		Get(apiPath).
 		Reply(201).
 		BodyString("")
 
-	_, err := getDataFromURL(apiUrl+"/"+apiPath, ioutil.ReadAll)
+	instascrap := NewInstascrap(nil)
+	_, err := instascrap.getDataFromURL(apiURL+"/"+apiPath, ioutil.ReadAll)
 
 	assert.Error(t, err)
 }
@@ -66,15 +70,16 @@ func TestGetDataFromUrlNon200HttpCode(t *testing.T) {
 func TestGetDataFromUrlBodyReadError(t *testing.T) {
 	defer gock.Off()
 
-	apiUrl := "http://example.com"
+	apiURL := "http://example.com"
 	apiPath := "status"
 
-	gock.New(apiUrl).
+	gock.New(apiURL).
 		Get(apiPath).
 		Reply(200).
 		BodyString("")
 
-	_, err := getDataFromURL(apiUrl+"/"+apiPath, func(r io.Reader) ([]byte, error) {
+	instascrap := NewInstascrap(nil)
+	_, err := instascrap.getDataFromURL(apiURL+"/"+apiPath, func(r io.Reader) ([]byte, error) {
 		return nil, errors.New("IO Reader error occurred")
 	})
 

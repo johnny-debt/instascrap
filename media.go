@@ -19,11 +19,11 @@ type Media struct {
 	IsAdvertising bool
 }
 
-// Returns latest medias from the hashtag page
-func GetHashtagMedia(tag string) ([]Media, error) {
+// GetHashtagMedia returns latest medias from the hashtag page
+func (instascrap *Instascrap) GetHashtagMedia(tag string) ([]Media, error) {
 	var medias []Media
 	url := fmt.Sprintf(hashtagMediasURL, tag, "")
-	jsonBody, err := getDataFromURL(url, ioutil.ReadAll)
+	jsonBody, err := instascrap.getDataFromURL(url, ioutil.ReadAll)
 	if err != nil {
 		return nil, err
 	}
