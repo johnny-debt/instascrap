@@ -1,6 +1,6 @@
 package instascrap
 
-// Instagram account info.
+// Account stores an Instagram account's info.
 type Account struct {
 	ID       string
 	Username string
